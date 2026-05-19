@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>معركة الـ 40% - النسخة الملحمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --obsidian: #020617;
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.15);
+            --slate-light: #f8fafc;
+            --slate-muted: #94a3b8;
+            --danger: #ef4444;
+            --warning: #facc15;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #0f172a; display: grid; place-items: center; min-height: 100vh; font-family: 'Cairo', sans-serif; color: var(--slate-light); }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--obsidian);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 80px;
+            border: 1px solid #1e293b;
+        }
+
+        .slide-footer {
+            position: absolute;
+            bottom: 30px;
+            right: 80px;
+            text-align: right;
+            border-right: 4px solid var(--emerald);
+            padding-right: 15px;
+            z-index: 100;
+        }
+        .slide-footer .eng-name { font-size: 18px; font-weight: 700; color: var(--slate-light); margin: 0; line-height: 1.2; }
+        .slide-footer .eng-sub { font-size: 13px; color: var(--slate-muted); margin: 0; }
+
+        .bg-glow {
+            position: absolute;
+            top: -10%; right: -10%; width: 50%; height: 50%;
+            background: radial-gradient(circle, var(--emerald-glow) 0%, transparent 70%);
+            z-index: 0; pointer-events: none;
+        }
+
+        .slide-title { font-size: 42px; font-weight: 700; margin-bottom: 25px; position: relative; z-index: 2; line-height: 1.2; border-right: 6px solid var(--emerald); padding-right: 20px; }
+        .slide-title span { color: var(--emerald); }
+        .content-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; z-index: 2; width: 100%; }
+
+        .two-column { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; width: 100%; }
+        .tile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; width: 100%; }
+        .tile { background: rgba(30, 41, 59, 0.4); padding: 30px; border-radius: 16px; border-bottom: 4px solid var(--emerald); }
+        .tile i { font-size: 40px; color: var(--emerald); margin-bottom: 15px; }
+        .tile h3 { font-size: 24px; margin-bottom: 12px; color: #fff; }
+        .tile p { font-size: 16px; color: var(--slate-muted); line-height: 1.6; }
+
+        .quote-box { border-right: 5px solid var(--emerald); padding-right: 25px; font-size: 26px; font-style: italic; line-height: 1.6; color: #e2e8f0; }
+        .big-bold-center { font-size: 72px; font-weight: 700; text-align: center; line-height: 1.2; margin: 0; }
+        .big-bold-center span { color: var(--emerald); }
+
+        .panel-box { padding: 25px; border-radius: 12px; margin-top: 15px; line-height: 1.6; font-size: 18px; }
+        .panel-danger { background: rgba(239, 68, 68, 0.08); border-right: 5px solid var(--danger); }
+        .panel-success { background: rgba(16, 185, 129, 0.08); border-right: 5px solid var(--emerald); }
+        .panel-info { background: rgba(56, 189, 248, 0.08); border-right: 5px solid #38bdf8; }
+
+        .chart-container { width: 100%; }
+        .chart-row { margin-bottom: 15px; }
+        .chart-label { display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 6px; font-weight: 600; }
+        .bar-track { height: 12px; background: #1e293b; border-radius: 6px; overflow: hidden; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--emerald), #3b82f6); border-radius: 6px; }
+
+        .traffic-item { display: flex; align-items: center; gap: 25px; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid #1e293b; }
+        .light-bulb { width: 45px; height: 45px; border-radius: 50%; flex-shrink: 0; }
+
+        .custom-bullets { list-style: none; }
+        .custom-bullets li { position: relative; padding-right: 30px; font-size: 18px; margin-bottom: 12px; line-height: 1.6; }
+        .custom-bullets li::before { content: "✦"; position: absolute; right: 0; color: var(--emerald); font-size: 20px; }
+
+        .split-box { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%; margin-top: 15px; }
+        .split-card { background: rgba(255,255,255,0.02); border: 1px solid #1e293b; padding: 25px; border-radius: 16px; text-align: right; }
+        .split-card h4 { font-size: 22px; color: #fff; margin-bottom: 10px; }
+        .split-card p { font-size: 16px; color: var(--slate-muted); line-height: 1.6; }
+
+        .slide-image { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .image-container { display: flex; justify-content: center; align-items: center; height: 100%; max-height: 450px; }
+
+        /* ===== ANIMATIONS & KEYFRAMES ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(35px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes glowBreathe {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.08); }
+        }
+        @keyframes barGrow {
+            from { width: 0%; }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px currentColor; }
+            50% { box-shadow: 0 0 40px currentColor, 0 0 60px currentColor; }
+        }
+        @keyframes typeReveal {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes floatSoft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* === SLIDE TITLES === */
+        .slide-title {
+            animation: fadeInRight 0.7s ease-out both;
+        }
+
+        /* === BIG BOLD CENTER TEXT === */
+        .big-bold-center {
+            animation: typeReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* === BACKGROUND GLOW === */
+        .bg-glow {
+            animation: glowBreathe 5s ease-in-out infinite;
+        }
+
+        /* === CONTENT AREAS === */
+        .content-area {
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        /* === TILES (3-column & 4-column grids) === */
+        .tile {
+            animation: scaleIn 0.5s ease-out both;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .tile:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+        }
+        .tile:nth-child(1) { animation-delay: 0.15s; }
+        .tile:nth-child(2) { animation-delay: 0.3s; }
+        .tile:nth-child(3) { animation-delay: 0.45s; }
+        .tile:nth-child(4) { animation-delay: 0.6s; }
+
+        /* === PANEL BOXES === */
+        .panel-box {
+            animation: fadeInUp 0.6s ease-out 0.3s both;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .panel-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        /* === SPLIT CARDS === */
+        .split-card {
+            animation: scaleIn 0.5s ease-out both;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .split-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+        .split-box .split-card:nth-child(1) { animation-delay: 0.2s; }
+        .split-box .split-card:nth-child(2) { animation-delay: 0.4s; }
+
+        /* === IMAGES === */
+        .image-container {
+            animation: fadeInLeft 0.8s ease-out 0.4s both;
+        }
+        .slide-image {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .image-container:hover .slide-image {
+            transform: scale(1.03);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.6);
+        }
+
+        /* === CHART BARS === */
+        .bar-fill {
+            animation: barGrow 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+        .chart-row:nth-child(1) .bar-fill { animation-delay: 0.3s; }
+        .chart-row:nth-child(2) .bar-fill { animation-delay: 0.6s; }
+        .chart-row:nth-child(3) .bar-fill { animation-delay: 0.9s; }
+
+        /* === TRAFFIC LIGHTS === */
+        .traffic-item {
+            animation: fadeInUp 0.6s ease-out both;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .traffic-item:hover {
+            transform: translateX(-8px);
+            background: rgba(255,255,255,0.04);
+        }
+        .traffic-item:nth-child(1) { animation-delay: 0.2s; }
+        .traffic-item:nth-child(2) { animation-delay: 0.45s; }
+        .traffic-item:nth-child(3) { animation-delay: 0.7s; }
+
+        .light-bulb {
+            animation: pulseGlow 2.5s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+        .traffic-item:hover .light-bulb {
+            transform: scale(1.15);
+        }
+
+        /* === QUOTE BOX === */
+        .quote-box {
+            animation: fadeInRight 0.8s ease-out 0.3s both;
+            transition: border-color 0.3s ease;
+        }
+        .quote-box:hover {
+            border-color: #34d399;
+        }
+
+        /* === SLIDE FOOTER === */
+        .slide-footer {
+            animation: fadeInUp 0.5s ease-out 0.8s both;
+        }
+
+        /* === SLIDE 1 SPECIAL — TITLE SHIMMER === */
+        #slide1 .big-bold-center span {
+            background: linear-gradient(90deg, var(--emerald), #34d399, #6ee7b7, var(--emerald));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite, typeReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* === SLIDE 15 SPECIAL — SYCOPHANCY TITLE === */
+        #slide15 .big-bold-center {
+            background: linear-gradient(90deg, var(--emerald), #34d399, #6ee7b7, var(--emerald));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite, typeReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* === SLIDE 4 — DANGER TEXT PULSE === */
+        #slide4 .big-bold-center span {
+            animation: pulseGlow 3s ease-in-out infinite;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* === CUSTOM BULLETS ANIMATION === */
+        .custom-bullets li {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+        .custom-bullets li:nth-child(1) { animation-delay: 0.4s; }
+        .custom-bullets li:nth-child(2) { animation-delay: 0.6s; }
+
+        /* === SLIDE 21 QR CODE FLOAT === */
+        #slide21 .image-container {
+            animation: floatSoft 3s ease-in-out infinite;
+        }
+
+        /* === GLOBAL SMOOTH TRANSITIONS === */
+        * {
+            scroll-behavior: smooth;
+        }
+        .slide-container {
+            transition: box-shadow 0.4s ease;
+        }
+        .slide-container:hover {
+            box-shadow: 0 0 60px rgba(16, 185, 129, 0.08);
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-container" id="slide1">
+    <div class="bg-glow"></div>
+    <div class="content-area" style="align-items: center; text-align: center;">
+        <h1 class="big-bold-center" style="font-size: 80px; margin-top: 40px;">معركة الـ 40%:<br><span>لماذا لن يستبدلك الذكاء الاصطناعي؟</span></h1>
+        <p style="font-size: 24px; color: var(--slate-muted); margin-top: 30px;">ورشة عمل توعوية وتكنولوجية لمهندسي البرمجيات</p>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide2">
+    <h2 class="slide-title">رؤية نيفيديا: <span>عصر المبرمج الشامل</span></h2>
+    <div class="content-area">
+        <div class="two-column" style="grid-template-columns: 1.1fr 0.9fr;">
+            <div>
+                <div class="quote-box">
+                    "على مدى الـ 10 أو 15 سنة الماضية، كان الجميع يقول لكم: تعلّموا البرمجة وعلوم الحاسوب... لكن الحقيقة الآن هي العكس تماماً! مهمتنا هي تطوير تقنيات تجعل لا أحد يضطر إلى كتابة الأكواد، وأن تصبح لغة البرمجة هي اللغة البشرية العادية."
+                </div>
+                <p style="margin-top: 20px; font-size: 20px; color: var(--emerald); font-weight: 600;">— جينسن هوانغ، الرئيس التنفيذي لشركة NVIDIA</p>
+                <div class="panel-box panel-success" style="margin-top: 20px;">
+                    <p>✨ كل شخص في العالم الآن أصبح مبرمجاً بفضل القدرة على صياغة الأوامر باللغة البشرية الطبيعية — هذا هو المعجزة الحقيقية للذكاء الاصطناعي الحالي.</p>
+                </div>
+            </div>
+            <div class="image-container" style="max-height: 450px; overflow: hidden;">
+                <img src="nvidia.jpg" alt="Jensen Huang" class="slide-image" style="object-fit: cover; object-position: top;">
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide3">
+    <h2 class="slide-title">الحقيقة خلف الأرقام: <span>زلزال التسريحات وعقدة الـ Washing</span></h2>
+    <div class="content-area">
+        <div class="two-column" style="grid-template-columns: 1.1fr 0.9fr; gap: 30px;">
+            <div>
+                <p style="font-size: 19px; margin-bottom: 20px; color: #fff;">منذ بداية عام 2026 وحتى الآن، فقد أكثر من <strong>92,000 موظف تقني</strong> وظائفهم حول العالم، بينما يقترب الرقم الإجمالي منذ عام 2020 من حاجز الـ 900 ألف موظف تقني.</p>
+                <div class="chart-container">
+                    <div class="chart-row">
+                        <div class="chart-label"><span>Amazon (أكثر من 30,000 وظيفة منذ 2025)</span><span>85%</span></div>
+                        <div class="bar-track"><div class="bar-fill" style="width: 85%;"></div></div>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart-label"><span>Oracle (أكثر من 10,000 موظف بهدوء تام)</span><span>65%</span></div>
+                        <div class="bar-track"><div class="bar-fill" style="width: 65%;"></div></div>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart-label"><span>Meta (8,000 موظف + تجميد آلاف الوظائف)</span><span>50%</span></div>
+                        <div class="bar-track"><div class="bar-fill" style="width: 50%;"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="panel-box panel-danger" style="margin-top: 0; padding: 20px;">
+                    <h4 style="color: var(--danger); margin-bottom: 5px; font-size: 18px;">معضلة الـ AI Washing</h4>
+                    <p style="font-size: 15px;">الأخطر هو أن 47.9% من تسريحات 2026 كان سببها المعلن هو "الاستغناء لصالح AI". الحقيقة؟ الشركات تستخدم الذكاء الاصطناعي كشماعة لتغطية قرارات خاطئة وتضخم توظيف حدث بعد كورونا!</p>
+                </div>
+                <div class="panel-box panel-info" style="margin-top: 0; padding: 15px 20px; background: rgba(56, 189, 248, 0.05); font-style: italic; font-size: 15px;">
+                    "هناك الكثير من الشركات التي تلوم الذكاء الاصطناعي على قرارات تسريح موظفين كانت ستحدث في كل الأحوال وعلى أي حال كإجراء تصحيحي لها." <br>
+                    <span style="color: #38bdf8; font-weight: bold; font-style: normal; display: block; margin-top: 5px; text-align: left;">— Sam Altman, OpenAI</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide4" style="justify-content: center; text-align: center;">
+    <div class="content-area">
+        <h1 class="big-bold-center" style="font-size: 68px; line-height: 1.4; color: #fff;">
+            مين فيكم...<br>
+            <span style="color: var(--danger);">كره التخصص</span> بعد ما سمع<br>
+            زي هاد الكلام؟
+        </h1>
+        <p style="font-size: 28px; color: var(--slate-muted); margin-top: 35px;">أو حسّ إنه أثّر عليه أو على طموحه بشكل سلبي?</p>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide5">
+    <h2 class="slide-title">التحديات الثلاثة الكبرى: <span>بوصلة الوعي للمهندس العصري</span></h2>
+    <div class="content-area">
+        <div class="tile-grid">
+            <div class="tile">
+                <div style="text-align: center;"><i class="fa-solid fa-brain"></i></div>
+                <h3 style="text-align: center;">01 - الكود الأعمى</h3>
+                <p>الفرق الجوهري بين كاتب كود ينسخ بشكل أعمى، وبين مهندس حقيقي يفهم السياق والمسؤولية المنطقية.</p>
+            </div>
+            <div class="tile" style="border-bottom-color: #38bdf8;">
+                <div style="text-align: center;"><i class="fa-solid fa-code-fork" style="color: #38bdf8;"></i></div>
+                <h3 style="text-align: center;">02 - كود السباغيتي</h3>
+                <p>عشوائية البناء البرمجي؛ أكواد برمجية تعمل في ظاهرها للحظة الحالية، وتنهار بالكامل غداً عند أول تعديل.</p>
+            </div>
+            <div class="tile" style="border-bottom-color: var(--warning);">
+                <div style="text-align: center;"><i class="fa-solid fa-hourglass-half" style="color: var(--warning);"></i></div>
+                <h3 style="text-align: center;">03 - الخوف من البطء</h3>
+                <p>عقدة الإحباط المقارن بأول الطريق؛ الشعور بالضعف أمام سرعة الآلة الخارقة بضغط زر واحدة.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide6">
+    <h2 class="slide-title">التحدي الأول: <span>الكود الأعمى وقاعدة تقسيم المسؤولية</span></h2>
+    <div class="content-area">
+        <div class="two-column" style="grid-template-columns: 1.1fr 0.9fr;">
+            <div>
+                <h3 style="color: var(--emerald); font-size: 24px; margin-bottom: 15px;">الذكاء الاصطناعي ينجز 60%.. والـ 40% الباقية هي سر بقائك!</h3>
+                <div class="split-box" style="grid-template-columns: 1fr; gap: 12px;">
+                    <div style="background: rgba(255,255,255,0.02); padding: 18px; border-radius: 8px; border: 1px solid #1e293b; font-size: 15px;">
+                        <strong>🤖 الـ 60% الخاصة بالآلة:</strong> كتابة الكود الأساسي بسرعة فائقة، إنشاء الملفات والهياكل الأولية، كتابة الدوال المتكررة المألوفة.
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.05); padding: 18px; border-radius: 8px; border: 1px solid var(--emerald); font-size: 15px;">
+                        <strong>💡 الـ 40% الخاصة بك كمهندس:</strong> مراجعة جودة المنطق، اكتشاف الثغرات الأمنية الخفية، ربط وتكامل الأنظمة المعقدة ببعضها، وإسقاط الرؤية الإبداعية.
+                    </div>
+                </div>
+                <div class="panel-box panel-info" style="font-weight: bold; font-size: 18px; text-align: center; padding: 20px; margin-top: 15px;">
+                    "الـ 40% الهندسية هي الخط الفاصل والوحيد الذي يحمي مهندس البرمجيات المحترف عن كاتب الكود البسيط."
+                </div>
+            </div>
+            <div class="image-container" style="max-height: 450px; overflow: hidden;">
+                <img src="robot.jpg" alt="Robot and Human" class="slide-image" style="object-fit: cover; object-position: center;">
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide7">
+    <h2 class="slide-title">التحدي الأول | <span>مثال 1: سيناريو كارثة الدفع الإلكتروني</span></h2>
+    <div class="content-area">
+        <div class="two-column" style="grid-template-columns: 1.2fr 0.8fr; gap: 30px;">
+            <div class="panel-box panel-danger" style="font-size: 18px; padding: 30px; border-radius: 16px; margin-top: 0;">
+                <h3 style="color: var(--danger); margin-bottom: 15px; font-size: 22px;"><i class="fa-solid fa-credit-card"></i> كود بثانيتين.. وخسائر بآلاف الدولارات!</h3>
+                <p>تخيل مبرمجاً طلب من الآلة كتابة صفحة دفع إلكتروني، الكود خرج بثانيتين والواجهة جميلة وشغالة 100%. قام بنشرها فوراً دون مراجعة هندسية عميقة.</p>
+                <p style="font-weight: bold; color: #fff; margin-top: 15px;">🚨 الكوارث المخفية في الكود المولد تلقائياً:</p>
+                <ul class="custom-bullets" style="margin-top: 10px; padding-right: 15px; font-size: 16px;">
+                    <li>إذا ضغط المستخدم على زر "تأكيد الدفع" مرتين متتاليتين بسرعة، يتم خصم المبلغ من بطاقته مرتين لغياب ميزة الـ Debouncing هندسياً!</li>
+                    <li>خطأ بسيط في معالجة الشروط المنطقية والـ Validation قد يجعل سعر المنتج بالخطأ $0؛ مما يؤدي لخسارة الشركة لآلاف الدولارات بلحظات.</li>
+                </ul>
+            </div>
+            <div class="image-container" style="max-height: 450px; overflow: hidden;">
+                <img src="card.jpg" alt="Digital Payment Error" class="slide-image" style="object-fit: cover; object-position: center;">
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide8">
+    <h2 class="slide-title">التحدي الأول | <span>مثال 2: قصة انهيار مشروع Moltbook (يناير 2026)</span></h2>
+    <div class="content-area">
+        <div class="two-column" style="grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="panel-box panel-danger" style="margin-top: 0; padding: 25px;">
+                    <h3 style="color: var(--danger); font-size: 20px; margin-bottom: 10px;">"ما كتبت ولا سطر كود واحد.. الـ AI بنى كل شيء!"</h3>
+                    <p style="font-size: 16px; line-height: 1.6;">عبارة قالها مؤسس المشروع علناً وبكل فخر واعتزاز في بداية شهر يناير من عام 2026.</p>
+                    <p style="font-size: 16px; font-weight: bold; color: #fff; margin-top: 15px;">النتيجة القاتلة بعد 3 أيام فقط من الإطلاق للعلن:</p>
+                </div>
+                <div style="background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px;">
+                    <div style="font-size: 32px; color: var(--danger); font-weight: bold;">1.5M</div>
+                    <div style="font-size: 15px; color: var(--slate-light);">مفتاح API سري وحساس للشركة تم كشفه علناً داخل الأكواد المولدة عشوائياً بدون حماية هندسية.</div>
+                </div>
+                <div style="background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px;">
+                    <div style="font-size: 32px; color: var(--danger); font-weight: bold;">35K</div>
+                    <div style="font-size: 15px; color: var(--slate-light);">مستخدم تضررت وسُربت إيميلاتهم وبياناتهم الحساسة بالكامل خلال 72 ساعة، مما أدى لانهيار المشروع للأبد!</div>
+                </div>
+            </div>
+            <div class="image-container" style="max-height: 450px; overflow: hidden;">
+                <img src="hack.jpg" alt="Data Breach Hack" class="slide-image" style="object-fit: cover; object-position: center;">
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide9">
+    <h2 class="slide-title">التحدي الثاني: <span>عقدة كود السباغيتي (Spaghetti Code)</span></h2>
+    <div class="content-area">
+        <div class="two-column" style="grid-template-columns: 1.1fr 0.9fr;">
+            <div>
+                <div class="panel-box panel-info" style="font-size: 19px; padding: 25px; margin-top: 0;">
+                    <h3 style="color: #38bdf8; margin-bottom: 15px;"><i class="fa-solid fa-layer-group"></i> العشوائية والتشابك الخفي خلف الواجهات اللامعة</h3>
+                    <p style="margin-bottom: 15px;">الذكاء الاصطناعي عبارة عن نموذج إحصائي احتمالي؛ هو يكتب لك كوداً يحقق النتيجة المطلوبة والظاهرية الآن لتنبهر بالسرعة الفورية.</p>
+                    <p style="color: var(--slate-muted); font-size: 17px;">لكنه يفتقر تماماً للنظرة الهندسية المستقبلية البنيوية؛ فهو لا يصمم كوداً مرناً وقابلاً للتوسع (Scalable) أو يتحمل تغير متطلبات الأعمال غداً.</p>
+                </div>
+                <div class="panel-box panel-success" style="margin-top: 20px; font-weight: bold; font-size: 18px;">
+                    🛡️ الحل الهندسي والدرع الواقي: تبني وتطبيق الـ Clean Architecture ومبادئ SOLID البرمجية الصارمة.
+                </div>
+            </div>
+            <div class="image-container" style="max-height: 450px; overflow: hidden;">
+                <img src="servers.jpg" alt="Server Room Infrastructure" class="slide-image" style="object-fit: cover; object-position: center;">
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide10">
+    <h2 class="slide-title">التحدي الثاني | <span>مثال 1: قصة تطبيق إدارة الصيدلية المنهار</span></h2>
+    <div class="content-area">
+        <div class="panel-box panel-danger" style="font-size: 19px; padding: 35px; border-radius: 16px; margin-top: 0;">
+            <h3 style="color: var(--danger); margin-bottom: 15px;"><i class="fa-solid fa-prescription-bottle-medical"></i> كود يعمل اليوم.. والسيستم يدفن غداً!</h3>
+            <p style="margin-bottom: 15px;">تم الاستعانة بالذكاء الاصطناعي لبناء تطبيق صيدلية متكامل، التطبيق خرج للعمل وكان يعمل ظاهرياً بشكل ممتاز، ولكن هيكله الداخلي كان متداخلاً ومتشابكاً كالعجينة البرمجية الميتة.</p>
+            <p style="font-weight: bold; color: #fff; margin-top: 15px; border-right: 4px solid var(--danger); padding-right: 15px;">💥 صدمة الواقع بعد شهرين فقط من التشغيل:</p>
+            <p style="margin-top: 10px; font-size: 18px; color: var(--slate-light);">طلب صاحب الصيدلية تعديل ميزة مالية بسيطة جداً (إضافة ضريبة القيمة المضافة على الفاتورة). بمجرد تعديل وإدخل سطر الكود في مكان واحد، انهار وتوقف السيستم بالكامل في كل الفروع! لأن الكود عشوائي وتغيير جزء أفسد 10 أجزاء أخرى لغياب الفصل المعماري.</p>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide11">
+    <h2 class="slide-title">التحدي الثاني | <span>مثال 2: دراسة حالة (Lens vs Moltbook)</span></h2>
+    <div class="content-area">
+        <p style="font-size: 20px; margin-bottom: 20px; color: var(--slate-muted);">أداتان مبنيتان بنفس التكنولوجيا المتاحة للجميع، ولكن النتائج كانت متناقضة تماماً ومثيرة للاهتمام:</p>
+        <div class="split-box">
+            <div class="split-card" style="border-top: 4px solid var(--danger); background: rgba(239,68,68,0.02);">
+                <h4 style="color: var(--danger);"><i class="fa-solid fa-circle-xmark"></i> تطبيق Moltbook (الذكاء الاصطناعي يقود)</h4>
+                <ul style="list-style: none; text-align: right; margin-top: 10px; font-size: 15px; line-height: 1.8;">
+                    <li>❌ المبرمج لم يختبر، لم يراجع، ولم يدقق الأكواد نهائياً.</li>
+                    <li>❌ إصدار واحد فوري ومباشر (اضغط Enter وانتظر المعجزة).</li>
+                    <li>💥 النتيجة الكارثية: انهيار كامل وثغرات أمنية قاتلة وموت المشروع خلال 3 أيام.</li>
+                </ul>
+            </div>
+            <div class="split-card" style="border-top: 4px solid var(--emerald); background: rgba(16,185,129,0.02);">
+                <h4 style="color: var(--emerald);"><i class="fa-solid fa-circle-check"></i> تطبيق Lens & Motion (المهندس البشري يقود)</h4>
+                <ul style="list-style: none; text-align: right; margin-top: 10px; font-size: 15px; line-height: 1.8;">
+                    <li>✅ هندسة واعية وتقسيم دقيق؛ تم إطلاق 8 إصدارات تتابعية ومحسنة.</li>
+                    <li>✅ اختبار وفحص دقيق وصارم لكل إصدار برمي على حدة.</li>
+                    <li>✨ النتيجة المبهرة: أداة برمجية ثابتة، عالية الأمان، وتعمل كمنتج حقيقي مستدام بشكل يومي.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide12">
+    <h2 class="slide-title">التحدي الثالث: <span>عقدة الخوف من البطء والإحباط المبكر</span></h2>
+    <div class="content-area">
+        <div class="two-column" style="grid-template-columns: 1.2fr 0.8fr;">
+            <div>
+                <h3 style="color: var(--warning); font-size: 24px; margin-bottom: 15px;">الآلة تخرج مشروعاً بثانية.. وأنت تقضي ساعات لتفهم سطر كود!</h3>
+                <p style="font-size: 18px; line-height: 1.6; color: var(--slate-light); margin-bottom: 15px;">هذا الشعور بالإحباط والتوتر المقارن يصيب أغلب الطلاب في بداية طريقهم، ويجعلهم يظنون خطأً أنهم غير صالحين للمجال.</p>
+                <div class="panel-box panel-info" style="margin-top: 10px; font-size: 16px;">
+                    💡 الحقيقة العلمية المريحة: البطء اليوم في بداية طريقك ليس دليلاً على ضعف قدراتك الذاتية — بل هو العملية الحيوية الإجبارية الوحيدة لبناء عقلية ومنطق "المهندس الحقيقي" في داخلك وتثبيت المفاهيم الهيكلية.
+                </div>
+            </div>
+            <div class="image-container" style="max-height: 450px; overflow: hidden;">
+                <img src="child.jpg" alt="Child Learning in Classroom" class="slide-image" style="object-fit: cover; object-position: center;">
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide13">
+    <h2 class="slide-title">التحدي الثالث | <span>مثال 1: معضلة الـ GPS والخرائط البشرية</span></h2>
+    <div class="content-area">
+        <p style="font-size: 20px; color: var(--slate-muted); margin-bottom: 20px;">تخيل معي شخصين غريبين دخلا مدينة جديدة وضخمة لأول مرة في حياتهما:</p>
+        <div class="two-column" style="grid-template-columns: 1.2fr 0.8fr; gap: 30px;">
+            <div class="split-box" style="grid-template-columns: 1fr; gap: 15px; margin-top: 0;">
+                <div class="split-card" style="padding: 15px 25px;">
+                    <h4 style="color: #3b82f6; font-size: 18px;"><i class="fa-solid fa-mobile-screen-button"></i> 🚶 الشخص الأول (اعتمد كلياً على الـ GPS)</h4>
+                    <p style="margin-top: 5px; font-size: 14px;">تحرك بسرعة قياسية ووصل لكل الأماكن، ولكنه لم ينظر لاسم شارع أو يحفظ معلماً. الصدمة: بمجرد انقطاع الشبكة ← تاه وضاع تماماً وعجز عن العودة خطوة!</p>
+                </div>
+                <div class="split-card" style="padding: 15px 25px;">
+                    <h4 style="color: var(--emerald); font-size: 18px;"><i class="fa-solid fa-map-location-dot"></i> 🗺️ الشخص الثاني (مشى وتاه وقرأ الخريطة يدوياً)</h4>
+                    <p style="margin-top: 5px; font-size: 14px;">وصل ببطء وتعب وتعثر، ولكنه بنى خريطة جغرافية حية داخل عقله وفهم معالم المدينة. النتيجة: مستحيل وضد المستحيل أن يضيع فيها أبداً طوال حياته!</p>
+                </div>
+            </div>
+            <div class="image-container" style="max-height: 380px; overflow: hidden;">
+                <img src="map.jpg" alt="Two People with Map" class="slide-image" style="object-fit: cover; object-position: center;">
+            </div>
+        </div>
+        <p style="text-align: center; font-size: 18px; font-weight: bold; margin-top: 20px; color: var(--warning);">الذكاء الاصطناعي هو الـ GPS البرمجي الخاص بك، وهو يخطئ كثيراً. من تظن سيقود عندما تنهار الأنظمة؟</p>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide14">
+    <h2 class="slide-title">التحدي الثالث | <span>مثال 2: ليش الأستاذ منع الآلة الحاسبة في الطفولة؟</span></h2>
+    <div class="content-area">
+        <div class="panel-box panel-info" style="font-size: 20px; padding: 30px; margin-top: 0; line-height: 1.7;">
+            <p>✋ <strong>الطفل الأول (الذي حسب بأصابعه وعقله):</strong> استغرق ربع ساعة كاملة في البداية ليحل مسألة ضرب بسيطة، أخطأ ثم فهم في النهاية منطق وفلسفة عملية التكرار الرياضي للضرب. 🚀 عندما يكبر: سيفهم الرياضيات المتقدمة والتفاضل والتكامل المعقد بسهولة فائقة ورسوخ تام.</p>
+            <hr style="border: 0; border-top: 1px solid #1e293b; margin: 15px 0;">
+            <p>📱 <strong>الطفل الثاني (الذي ضغط على زر الآلة الحاسبة مباشرة):</strong> خلال 3 ثوانٍ فقط برقم قياسي، ظهر له الجواب النهائي على الشاشة دون عناء. هو لم يفهم مطلقاً المعنى التراكمي لعملية الضرب. 📉 عندما يكبر: سيعجز تماماً ويقف مشلول التفكير أمام حل معادلة جبرية واحدة بسيطة بمفرده!</p>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide15" style="background: radial-gradient(circle at center, #111827 0%, var(--obsidian) 100%);">
+    <div class="content-area" style="text-align: center;">
+        <h1 class="big-bold-center" style="font-size: 76px; color: var(--emerald);">ظاهرة التطبيل البرمجي</h1>
+        <h2 style="font-size: 34px; color: #fff; margin-top: 15px;">مصطلح ومفهوم الـ Sycophancy الموثق علمياً</h2>
+        <p style="font-size: 22px; color: var(--slate-muted); max-width: 900px; margin: 30px auto; line-height: 1.6;">
+            نماذج الذكاء الاصطناعي الحالية تم تدريبها وضبطها باستخدام التقييم البشري (RLHF)؛ وهي مصمنة كأولوية قصوى لـ "إرضاء المستخدم البشري" وجعل تجربة المحادثة ممتعة ومريحة له، وليس لإعطائه الحقيقة العلمية البرمجية الجافة أو الصادمة دائماً!
+        </p>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide16">
+    <h2 class="slide-title">التطبيل البرمجي | <span>تجربة عملية: عندما تصفق لك الآلة على فشلك!</span></h2>
+    <div class="content-area" style="align-items: center;">
+        <div class="two-column" style="grid-template-columns: 1fr 1fr; gap: 30px; width: 100%;">
+            <div class="image-container" style="max-height: 480px;">
+                <img src="sycophancy-chat.jpg" alt="Sycophancy Chat Screenshot" class="slide-image" style="object-fit: contain; background: #000;">
+            </div>
+            <div class="panel-box panel-danger" style="font-size: 18px; padding: 25px; margin-top: 0; line-height: 1.7;">
+                ⚠️ <strong>الفضيحة والكارثة المنطقية المضحكة:</strong> <br><br>
+                الشرط الرياضي البرمجي المعروض في المحادثة <span style="font-family: monospace; font-weight: bold; color: var(--danger);">if (x > 10 && x < 5)</span> مستحيل فيزيائياً وعقلياً أن يتحقق! <br><br>
+                (مستحيل لـ x أن تكون أكبر من 10 وبنفس الوقت أصغر من 5)، الكود سيموت ولن يعمل أبداً البلوك البرمجي التابع له.<br><br>
+                ومع ذلك، قامت الآلة بالتملق والتطبيل الصارخ ووصف الفكرة بـ "العبقرية والاحترافية" فقط لترضي عاطفة المستخدم!
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide17">
+    <h2 class="slide-title">التطبيل البرمجي | <span>الإثبات العلمي الحاسم للأزمة</span></h2>
+    <div class="content-area">
+        <div class="two-column" style="grid-template-columns: 1.1fr 0.9fr; gap: 30px;">
+            <div>
+                <h3 style="color: #fff; font-size: 22px; margin-bottom: 10px;">ورقة بحثية من Stanford بالتعاون مع Anthropic</h3>
+                <p style="font-size: 16px; line-height: 1.6; color: var(--slate-muted); margin-bottom: 15px;">الدراسة العلمية الشهيرة المنشورة على منصة OpenReview بعنوان <strong>"Sycophancy in Language Models"</strong> أثبتت بالأرقام والتحليل المرعب حقيقة الأزمة الثنائية:</p>
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; border: 1px solid #1e293b; font-size: 15px; line-height: 1.6;">
+                    📌 <strong>حلقة التقييم المفرغة الخطيرة:</strong> البشر المقيمون للنماذج يفضلون ويعطون تقييمات عالية للإجابات "الحلوة المقبولة الممتعة عاطفياً" بدلاً من الإجابات الصحيحة الجافة، مما جعل النماذج تتعلم تملقك وتأييد أخطائك بدلاً من تصحيحها ومواجهتك بها هندسياً!
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 12px; max-height: 480px;">
+                <img src="paper.jpg" alt="Sycophancy Paper" class="slide-image" style="flex: 3; min-height: 0; object-fit: contain; object-position: top;">
+                <img src="sycophancy-chart.jpg" alt="Sycophancy Diagram" class="slide-image" style="flex: 1; min-height: 0; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide18">
+    <h2 class="slide-title">الحل العملي | <span>القاعدة 1: إشارة مرور الـ AI الهندسية</span></h2>
+    <div class="content-area">
+        <div class="traffic-item">
+            <div class="light-bulb" style="background-color: var(--danger); box-shadow: 0 0 25px var(--danger);"></div>
+            <div>
+                <h3 style="color: var(--danger); font-size: 20px; margin-bottom: 3px;">🔴 اللون الأحمر — أغلق الـ AI تماماً وامنع استخدامه</h3>
+                <p style="font-size: 15px; color: var(--slate-light);">عند دراسة واستيعاب مفهوم برمجي جديد لأول مرة، عند محاولة حل مسائل خوارزميات الـ DSA وتأسيس عصب التفكير، وفي الواجبات والامتحانات الأكاديمية الصارمة. <strong>تذكر دائماً: الألم والمعاناة هنا في الحل هما جوهر وسر التعلم البشري الصلب.</strong></p>
+            </div>
+        </div>
+        <div class="traffic-item">
+            <div class="light-bulb" style="background-color: var(--warning); box-shadow: 0 0 25px var(--warning);"></div>
+            <div>
+                <h3 style="color: var(--warning); font-size: 20px; margin-bottom: 3px;">🟡 اللون الأصفر — تعامل وتناقش معه بحذر وعقلية القائد</h3>
+                <p style="font-size: 15px; color: var(--slate-light);">تُفتح الإشارة الصفراء بعد أن تكون قد حاولت حل المشكلة والأكواد البرمجية بالكامل بيدك أولاً وعانيت معها؛ هنا تطلب منه شرحاً تفصيلياً إضافياً لعمق البنية، أو فحص كودك بحثاً عن Edge Cases. <strong>الـ AI هنا يوضع في قالب "المعلم والمناقش الاستراتيجي"، وليس الحلّال لمشاكلك.</strong></p>
+            </div>
+        </div>
+        <div class="traffic-item">
+            <div class="light-bulb" style="background-color: var(--emerald); box-shadow: 0 0 25px var(--emerald);"></div>
+            <div>
+                <h3 style="color: var(--emerald); font-size: 20px; margin-bottom: 3px;">🟢 اللون الأخضر — انطلق بحرية كاملة لإنتاجيتك</h3>
+                <p style="font-size: 15px; color: var(--slate-light);">تُفتح الإشارة الخضراء في نطاق كتابة الأكواد والملفات التكرارية الروتينية (Boilerplate)، استخراج وتعلّم الـ Syntax السريع للغات برمجة جديدة كلياً عليك بعد فهم الأساسيات، <strong>بشرط واحد صارم ومطلق: أن تكون قد تأسست وفهمت فلسفة كل سطر برمجي يولد بالكامل وتتحمل مسؤوليته الجنائية الهندسية.</strong></p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide19">
+    <h2 class="slide-title">الحل العملي | <span>القاعدة 2: القاعدة الذهبية لاختبار الفهم الهيكلي</span></h2>
+    <div class="content-area">
+        <div class="two-column" style="grid-template-columns: 1.1fr 0.9fr; gap: 40px;">
+            <div style="background: rgba(16, 185, 129, 0.03); padding: 25px 22px; border-radius: 24px; border: 3px dashed var(--emerald);">
+                <h1 style="font-size: 23px; color: #fff; line-height: 1.55; font-weight: 700; text-align: center;">
+                    "لو ما بتُقدر تقف على السبورة وتشرّح وتفصّل منطق وآلية عمل الكود لزميلك بكلماتك أنت بكل ثقة وبدون ما تفتح الـ AI أو تقرأ منه بشكل حرفي... <br>
+                    <span style="color: var(--danger);">فأنت لم تفهمه مطلقاً!</span> سكر الـ AI فوراً، وارجع اتعلمه وابنيه من الصفر صح."
+                </h1>
+                <p style="margin-top: 15px; font-size: 15px; color: var(--slate-muted); text-align: center; line-height: 1.6;">
+                    القدرة التعبيرية اللفظية والمنطقية على نقل وتفسير طريقة عمل السطور البرمجية والشروط بكلماتك الخاصة والفريدة وعرض الـ Architecture الخاص بها، هي المقياس الحقيقي لرسوخ المعرفة.
+                </p>
+            </div>
+            <div class="image-container" style="max-height: 450px; overflow: hidden;">
+                <img src="board.jpg" alt="Two Students Explaining Code on Whiteboard" class="slide-image" style="object-fit: cover; object-position: center;">
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide20">
+    <h2 class="slide-title">الحل العملي | <span>القاعدة 3: عتاد المهندس الاستراتيجي (4 أدوات فقط)</span></h2>
+    <div class="content-area">
+        <div class="tile-grid" style="grid-template-columns: repeat(4, 1fr); gap: 15px;">
+            <div class="tile" style="padding: 20px 15px; border-bottom-color: #3b82f6;">
+                <h3 style="color: #3b82f6; font-size: 20px; margin-bottom: 8px;"><i class="fa-solid fa-user-graduate"></i> Claude</h3>
+                <p style="font-size: 14px; line-height: 1.5;">المعلم والمناقش الخصوصي الأول؛ الأقوى ذكاءً برمجياً وتحليلياً وفلسفياً في شرح المفاهيم المعقدة، وتفكيك شروط المنطق.</p>
+            </div>
+            <div class="tile" style="padding: 20px 15px; border-bottom-color: #a78bfa;">
+                <h3 style="color: #a78bfa; font-size: 20px; margin-bottom: 8px;"><i class="fa-solid fa-book-bookmark"></i> NotebookLM</h3>
+                <p style="font-size: 14px; line-height: 1.5;">سلاح التلخيص، المذاكرة، والمراجعة الذكي؛ ترفع له ملفات الـ PDFs الخاصة بمحاضرات الجامعة وملاحظاتك، فيحولها لك بلحظات إلى ملخصات ذكية.</p>
+            </div>
+            <div class="tile" style="padding: 20px 15px; border-bottom-color: #34d399;">
+                <h3 style="color: #34d399; font-size: 20px; margin-bottom: 8px;"><i class="fa-solid fa-terminal"></i> Cursor</h3>
+                <p style="font-size: 14px; line-height: 1.5;">بيئة التطوير ومحرر الإنتاجية المتقدم؛ الأداة الأقوى لتسريع الكتابة الروتينية ومزامنة الأكواد وضبط الـ Architecture في المشاريع الحية الكبيرة.</p>
+            </div>
+            <div class="tile" style="padding: 20px 15px; border-bottom-color: var(--warning);">
+                <h3 style="color: var(--warning); font-size: 20px; margin-bottom: 8px;"><i class="fa-solid fa-magnifying-glass"></i> Perplexity</h3>
+                <p style="font-size: 14px; line-height: 1.5;">محرك البحث التكنولوجي الموثق؛ البديل العصري والذكي لمحرك جوجل التقليدي، تسأله عن أي مشكلة برمجية أو خطأ (Bug) فيعطيك إجابة مجمعة ومنسقة فوراً.</p>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 30px; color: var(--danger); font-weight: bold; font-size: 17px;">
+            ❌ "المطور الذي يشتت نفسه ويستخدم 10 أدوات بشكل سطحي وعشوائي تافه = لن يتعلم ولن يتقن وينمو في أي واحدة منها أبداً."
+        </p>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+    </div>
+</div>
+
+<div class="slide-container" id="slide21" style="justify-content: center; text-align: center;">
+    <div class="content-area">
+        <div class="two-column" style="grid-template-columns: 1.3fr 0.7fr; gap: 40px; text-align: right;">
+            <div>
+                <h2 class="big-bold-center" style="color: var(--emerald); font-size: 58px; text-align: right; margin-bottom: 20px;">شكراً لكم ولحضوركم المتميز</h2>
+                <div style="background: rgba(255,255,255,0.02); padding: 25px 35px; border-radius: 20px; border: 1px solid #1e293b;">
+                    <p style="font-size: 18px; color: #fff; margin-bottom: 12px; font-weight: bold; border-bottom: 2px solid #1e293b; padding-bottom: 8px;"><i class="fa-solid fa-envelope-open-text" style="color: var(--emerald); margin-left: 10px;"></i> 3 رسائل ذهبية نختم بها ملحمة هذه الورشة:</p>
+                    <p style="font-size: 15px; color: var(--emerald); margin-bottom: 8px; font-weight: 600;"><i class="fa-solid fa-shield-halved"></i> 1. الـ AI لن يستبدلك كمهندس برمجيات واعي، بل سيقضي على المبرمج التقليدي الهش اللّي عاش على النسخ واللصق.</p>
+                    <p style="font-size: 15px; color: #f1f5f9; margin-bottom: 8px;"><i class="fa-solid fa-gauge-high"></i> 2. تعثرك وصعوبة الفهم والخطأ في البداية هو الدليل البشري الطبيعي على أن عقلك يبني عضلاته الهندسية الحقيقية.</p>
+                    <p style="font-size: 15px; color: #cbd5e1; margin-bottom: 12px;"><i class="fa-solid fa-bolt"></i> 3. ابني وتأسس بقوة حديدية أولاً بيدك، ثم أطلق سلاح الذكاء الاصطناعي في يدك لتكتسح وتغير مجالك بالكامل.</p>
+                    <p style="font-size: 16px; color: var(--slate-muted); font-style: italic; margin-top: 10px; text-align: center;">"أنتم في أفضل توقيت تكنولوجي.. فاجعلوه يصب لصالحكم بالكامل بالوعي والهندسة الصلبة."</p>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; justify-content: center;">
+                <div style="display: flex; gap: 20px; align-items: flex-start;">
+                    <div style="text-align: center;">
+                        <div style="width: 180px; height: 180px; background: #fff; padding: 8px; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.5);">
+                            <img src="qr-mohammed.jpg" alt="QR م. محمد النويري" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <p style="font-size: 13px; color: var(--emerald); font-weight: 700; margin-top: 8px;">م. محمد النويري</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="width: 180px; height: 180px; background: #fff; padding: 8px; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.5);">
+                            <img src="qr-duaa.jpg" alt="QR م. دعاء اليازجي" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <p style="font-size: 13px; color: var(--emerald); font-weight: 700; margin-top: 8px;">م. دعاء اليازجي</p>
+                    </div>
+                </div>
+                <p style="font-size: 15px; color: #60a5fa; font-weight: bold; margin-top: 5px;"><i class="fa-brands fa-linkedin"></i> تواصلوا معنا عبر لينكد إن</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">
+        <p class="eng-name">م. محمد النويري</p>
+        <p class="eng-name">م. دعاء اليازجي</p>
+        <p class="eng-sub">باب الأسئلة والنقاش الـ Q&A مفتوح الآن لكم</p>
+    </div>
+</div>
+
+</body>
+</html>
